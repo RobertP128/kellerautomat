@@ -3,16 +3,20 @@ import java.util.Scanner;
 public class Main {
 
     private static double performOperator(double num1, double num2,char operator) throws Exception{
-        switch (operator){
-            case '+':
-                return num1+num2;
-            case '-':
-                return num1-num2;
-            case '*':
-                return num1*num2;
-            case '/':
-                if (num2==0) throw new Exception("Division by 0");
-                return num1/num2;
+        switch (operator) {
+            case '+' -> {
+                return num1 + num2;
+            }
+            case '-' -> {
+                return num1 - num2;
+            }
+            case '*' -> {
+                return num1 * num2;
+            }
+            case '/' -> {
+                if (num2 == 0) throw new Exception("Division by 0");
+                return num1 / num2;
+            }
         }
         throw new Exception("Unknown Operator");
     }
@@ -24,7 +28,7 @@ public class Main {
 
     public static void main(String[] args) {
         var scanner=new Scanner(System.in);
-        String formel ="";
+        String formel;
         do {
             System.out.print("Geben Sie eine vollständig geklammerte Formel ein [(q)uit]:");
 
@@ -45,21 +49,20 @@ public class Main {
                         char c = formel.charAt(pos);
                         char cmin1 = (pos > 0) ? formel.charAt(pos - 1) : ' ';
                         char cplus1 = (pos < formel.length()-1) ? formel.charAt(pos+1) : ' ';
-                        if (c == '(') {
-                            continue;
-                        } else if (isNumberic(cmin1, c,cplus1)) {
+
+                        if (isNumberic(cmin1, c,cplus1)) {
                             // check if end of string or next char is number or '.'
                             // if so then add to the current number string
                             // if not push the current numberString as  double
-                            String tmpNumberStr = "";
+                            StringBuilder tmpNumberStr = new StringBuilder();
                             do {
-                                tmpNumberStr += formel.charAt(pos);
+                                tmpNumberStr.append(formel.charAt(pos));
                                 pos++;
                                 cplus1 = (pos < formel.length()-1) ? formel.charAt(pos+1) : ' ';
                             } while (pos < formel.length() && isNumberic(formel.charAt(pos - 1), formel.charAt(pos),cplus1));
                             pos--;
                             numberStackpos++;
-                            numberStack[numberStackpos] = Double.parseDouble(tmpNumberStr);
+                            numberStack[numberStackpos] = Double.parseDouble(tmpNumberStr.toString());
                         } else if (knownOperators.indexOf(c) >= 0) {
                             operatorStackpos++;
                             operantorStack[operatorStackpos] = c;
