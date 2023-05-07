@@ -17,8 +17,8 @@ public class Main {
         throw new Exception("Unknown Operator");
     }
 
-    private static boolean isNumberic(char cmin1, char c){
-        return (c >= '0' && c <= '9')||c=='.' || (c=='-' && !(cmin1>='0' && cmin1<='9'));
+    private static boolean isNumberic(char cmin1, char c,char cplus1){
+        return (c >= '0' && c <= '9')||c=='.' || (c=='-' && !(cmin1>='0' && cmin1<='9') && (cplus1>='0' && cplus1<='9'));
     }
 
 
@@ -44,9 +44,10 @@ public class Main {
                     for (int pos = 0; pos < formel.length(); pos++) {
                         char c = formel.charAt(pos);
                         char cmin1 = (pos > 0) ? formel.charAt(pos - 1) : ' ';
+                        char cplus1 = (pos < formel.length()-1) ? formel.charAt(pos+1) : ' ';
                         if (c == '(') {
                             continue;
-                        } else if (isNumberic(cmin1, c)) {
+                        } else if (isNumberic(cmin1, c,cplus1)) {
                             // check if end of string or next char is number or '.'
                             // if so then add to the current number string
                             // if not push the current numberString as  double
@@ -54,7 +55,8 @@ public class Main {
                             do {
                                 tmpNumberStr += formel.charAt(pos);
                                 pos++;
-                            } while (pos < formel.length() && isNumberic(formel.charAt(pos - 1), formel.charAt(pos)));
+                                cplus1 = (pos < formel.length()-1) ? formel.charAt(pos+1) : ' ';
+                            } while (pos < formel.length() && isNumberic(formel.charAt(pos - 1), formel.charAt(pos),cplus1));
                             pos--;
                             numberStackpos++;
                             numberStack[numberStackpos] = Double.parseDouble(tmpNumberStr);
