@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kellerautomat:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/kellerautomat_jar</output-path>
+    <root id="archive" name="kellerautomat.jar">
+      <element id="module-output" name="kellerautomat" />
+    </root>
+  </artifact>
+</component>
