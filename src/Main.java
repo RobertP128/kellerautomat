@@ -17,8 +17,8 @@ public class Main {
         throw new Exception("Unknown Operator");
     }
 
-    private static boolean isNumberic(char c){
-        return (c >= '0' && c <= '9')||c=='.';
+    private static boolean isNumberic(char cmin1, char c){
+        return (c >= '0' && c <= '9')||c=='.' || (c=='-' && !(cmin1>='0' && cmin1<='9'));
     }
 
 
@@ -39,48 +39,50 @@ public class Main {
 
             try {
 
+                if (!formel.equals("q")) {
 
-                for (int pos = 0; pos < formel.length(); pos++) {
-                    char c = formel.charAt(pos);
-
-                    if (c == '(') {
-                        continue;
-                    } else if (isNumberic(c)) {
-                        // check if end of string or next char is number or '.'
-                        // if so then add to the current number string
-                        // if not push the current numberString as  double
-                        String tmpNumberStr = "";
-                        do {
-                            tmpNumberStr += formel.charAt(pos);
-                            pos++;
-                        } while (pos < formel.length() && isNumberic(formel.charAt(pos)));
-                        pos--;
-                        numberStackpos++;
-                        numberStack[numberStackpos] = Double.parseDouble(tmpNumberStr);
-                    } else if (knownOperators.indexOf(c) >= 0) {
-                        operatorStackpos++;
-                        operantorStack[operatorStackpos] = c;
-                    } else if (c == ')') {
-                        // Calculate the result of the statck
-                        while (operatorStackpos >= 0 && numberStackpos >= 0) {
-                            // pull the operator
-                            char op = operantorStack[operatorStackpos];
-                            operatorStackpos--;
-                            // pull 2x number
-                            // perform operation
-                            // push result
-                            if (numberStackpos >= 1) {
-                                numberStack[numberStackpos - 1] = performOperator(numberStack[numberStackpos - 1], numberStack[numberStackpos], op);
-                                numberStackpos--;
+                    for (int pos = 0; pos < formel.length(); pos++) {
+                        char c = formel.charAt(pos);
+                        char cmin1 = (pos > 0) ? formel.charAt(pos - 1) : ' ';
+                        if (c == '(') {
+                            continue;
+                        } else if (isNumberic(cmin1, c)) {
+                            // check if end of string or next char is number or '.'
+                            // if so then add to the current number string
+                            // if not push the current numberString as  double
+                            String tmpNumberStr = "";
+                            do {
+                                tmpNumberStr += formel.charAt(pos);
+                                pos++;
+                            } while (pos < formel.length() && isNumberic(formel.charAt(pos - 1), formel.charAt(pos)));
+                            pos--;
+                            numberStackpos++;
+                            numberStack[numberStackpos] = Double.parseDouble(tmpNumberStr);
+                        } else if (knownOperators.indexOf(c) >= 0) {
+                            operatorStackpos++;
+                            operantorStack[operatorStackpos] = c;
+                        } else if (c == ')') {
+                            // Calculate the result of the statck
+                            while (operatorStackpos >= 0 && numberStackpos >= 0) {
+                                // pull the operator
+                                char op = operantorStack[operatorStackpos];
+                                operatorStackpos--;
+                                // pull 2x number
+                                // perform operation
+                                // push result
+                                if (numberStackpos >= 1) {
+                                    numberStack[numberStackpos - 1] = performOperator(numberStack[numberStackpos - 1], numberStack[numberStackpos], op);
+                                    numberStackpos--;
+                                }
                             }
                         }
+
+
                     }
 
-
+                    // if no error then number[0] will store the result
+                    System.out.println(numberStack[0]);
                 }
-
-                // if no error then number[0] will store the result
-                System.out.println(numberStack[0]);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
